@@ -105,11 +105,15 @@ const HomePage: FC<IHome> = () => {
   };
 
   const handleTranslateApi = async (payload: ITranslateTextPayload) => {
-    let data = await AWSTranslate.doTranslate(payload);
+    try {
+      let data = await AWSTranslate.doTranslate(payload);
 
-    handleChangeOutput(data.text);
+      handleChangeOutput(data.text);
 
-    setLoading(false);
+      setLoading(false);
+    } catch (error: any) {
+      console.log(error?.message);
+    }
   };
 
   const handleChangeInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
