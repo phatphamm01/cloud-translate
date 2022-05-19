@@ -1,13 +1,13 @@
-import { ILanguage } from "@common/constant/language";
-import ChangeLanguage from "@components/ChangeLanguage";
-import Input from "@components/Input";
-import Header from "@components/Layout/Header";
-import AWSTranslate from "@services/AWS";
-import { ITranslateTextPayload } from "@services/AWS/interface";
-import { useRouter } from "next/dist/client/router";
-import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
+import { ILanguage } from '@common/constant/language';
+import ChangeLanguage from '@components/ChangeLanguage';
+import Input from '@components/Input';
+import Header from '@components/Layout/Header';
+import AWSTranslate from '@services/AWS';
+import { ITranslateTextPayload } from '@services/AWS/interface';
+import { useRouter } from 'next/dist/client/router';
+import { ChangeEvent, FC, useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
 
 const HomeContainer = styled.div`
   ${tw`mb-20`}
@@ -25,8 +25,8 @@ interface IHome {}
 
 const HomePage: FC<IHome> = () => {
   const router = useRouter();
-  const [input, setInput] = useState<string>("");
-  const [output, setOutput] = useState<string>("");
+  const [input, setInput] = useState<string>('');
+  const [output, setOutput] = useState<string>('');
   const [loading, setLoading] = useState<boolean>();
   const [selectInput, setSelectInput] = useState<ILanguage>();
   const [selectOutput, setSelectOutput] = useState<ILanguage>();
@@ -35,9 +35,9 @@ const HomePage: FC<IHome> = () => {
 
   useEffect(() => {
     let url = new URL(location.origin + router.asPath);
-    let text = url.searchParams.get("text");
+    let text = url.searchParams.get('text');
 
-    setInput(text || "Hello world! Who I am.");
+    setInput(text || 'Hello world! Who I am.');
   }, []);
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const HomePage: FC<IHome> = () => {
     let query: any = handleInitQuery(url);
     console.log(query);
 
-    if (input?.trim() !== "") {
+    if (input?.trim() !== '') {
       query.text = input;
     }
 
@@ -61,7 +61,7 @@ const HomePage: FC<IHome> = () => {
   useEffect(() => {
     if (input) return;
     clearTimeout(timer.current);
-    setOutput("");
+    setOutput('');
   }, [input]);
 
   useEffect(() => {
@@ -73,8 +73,8 @@ const HomePage: FC<IHome> = () => {
   }, [selectOutput]);
 
   const handleInitQuery = (url: URL) => {
-    let from = url.searchParams.get("from");
-    let to = url.searchParams.get("to");
+    let from = url.searchParams.get('from');
+    let to = url.searchParams.get('to');
 
     return {
       from: selectInput?.LanguageCode || from,
@@ -83,15 +83,15 @@ const HomePage: FC<IHome> = () => {
   };
 
   const handleCallApi = () => {
-    if (input.trim() === "") return;
+    if (input.trim() === '') return;
     clearTimeout(timer.current);
     timer.current = setTimeout(() => {
       setLoading(true);
 
       let payload: ITranslateTextPayload = {
         Text: input,
-        SourceLanguageCode: selectInput?.LanguageCode || "auto",
-        TargetLanguageCode: selectOutput?.LanguageCode || "vi",
+        SourceLanguageCode: selectInput?.LanguageCode || 'auto',
+        TargetLanguageCode: selectOutput?.LanguageCode || 'vi',
       };
 
       handleTranslateApi(payload);
@@ -99,7 +99,7 @@ const HomePage: FC<IHome> = () => {
   };
 
   const handleChangeOutput = (data: string) => {
-    if (input !== "") {
+    if (input !== '') {
       setOutput(data);
     }
   };
@@ -107,7 +107,7 @@ const HomePage: FC<IHome> = () => {
   const handleTranslateApi = async (payload: ITranslateTextPayload) => {
     let data = await AWSTranslate.doTranslate(payload);
 
-    handleChangeOutput(data.TranslatedText);
+    handleChangeOutput(data.text);
 
     setLoading(false);
   };
@@ -129,14 +129,14 @@ const HomePage: FC<IHome> = () => {
             value={input}
             onChange={handleChangeInput}
             volIcon
-            placeholder="Vui lòng nhập văn bản vào đây ..."
+            placeholder='Vui lòng nhập văn bản vào đây ...'
           />
           <Input
             loading={loading}
             value={output}
             eventPoiter={true}
             volIcon
-            placeholder=""
+            placeholder=''
           />
         </TranslateBox>
       </HomeBox>

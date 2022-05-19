@@ -1,21 +1,28 @@
-import AWS from "aws-sdk";
-import { ITranslateTextPayload } from "./interface";
-
-AWS.config.region = "us-east-1";
-AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-  IdentityPoolId: "us-east-1:e8ecc73b-676d-46f8-89ba-e957866f07e6",
-});
+import { ITranslateTextPayload } from './interface';
+import axios from 'axios';
 
 const AWSTranslate = (function () {
-  const translate = new AWS.Translate({ region: AWS.config.region });
-  const polly = new AWS.Polly();
-
-  const doTranslate = (payload: ITranslateTextPayload) => {
+  const doTranslate = (
+    payload: ITranslateTextPayload
+  ): Promise<{ text: string }> => {
     if (!payload.Text) {
-      throw "Vui lòng nhập đầu vào";
+      throw 'Vui lòng nhập đầu vào';
     }
 
-    return translate.translateText(payload).promise();
+    return new Promise(async (resolve) => {
+      try {
+        const data = await axios.get('https://translate-api-nu.vercel.app/', {
+          params: {
+            text: payload.Text,
+            from: payload.SourceLanguageCode,
+            to: payload.TargetLanguageCode,
+          },
+        });
+        resolve(data.data);
+      } catch (error) {
+        resolve({ text: 'fail' });
+      }
+    });
   };
 
   return {

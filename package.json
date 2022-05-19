@@ -1,6 +1,7 @@
 {
   "name": "fe-next-ai",
   "private": true,
+  "main": "index.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -8,14 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@vitalets/google-translate-api": "^8.0.0",
     "aws-sdk": "^2.1034.0",
     "axios": "^0.24.0",
     "babel-preset-next": "^1.4.0",
+    "http": "^0.0.1-security",
     "iconsax-react": "^0.0.4",
     "next": "12.0.4",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "styled-components": "^5.3.3"
+    "stream": "^0.0.2",
+    "styled-components": "^5.3.3",
+    "translate-google": "^1.5.0"
   },
   "devDependencies": {
     "@types/node": "16.11.9",

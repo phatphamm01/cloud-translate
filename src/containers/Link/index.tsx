@@ -1,12 +1,12 @@
-import { FC, FormEvent, Fragment, useEffect, useRef, useState } from "react";
-import tw from "twin.macro";
-import styled from "styled-components";
-import Header from "@components/Layout/Header";
-import axios from "axios";
-import AWSTranslate from "@services/AWS";
-import Select from "./components/Select";
-import { ILanguage } from "@common/constant/language";
-import Loading from "@design/Loading";
+import { FC, FormEvent, Fragment, useEffect, useRef, useState } from 'react';
+import tw from 'twin.macro';
+import styled from 'styled-components';
+import Header from '@components/Layout/Header';
+import axios from 'axios';
+import AWSTranslate from '@services/AWS';
+import Select from './components/Select';
+import { ILanguage } from '@common/constant/language';
+import Loading from '@design/Loading';
 
 const LinkPageContainer = styled.div`
   ${tw``}
@@ -71,7 +71,7 @@ interface ILinkPage {}
 const LinkPage: FC<ILinkPage> = () => {
   const [html, setHtml] = useState<string>();
   const iframeRef = useRef<any>();
-  const [input, setInput] = useState<string>("");
+  const [input, setInput] = useState<string>('');
   const [select, setSelect] = useState<ILanguage>();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -79,9 +79,9 @@ const LinkPage: FC<ILinkPage> = () => {
 
   const getPageApi = async (url: string) => {
     try {
-      setHtml("");
+      setHtml('');
       setLoading(true);
-      let response = await axios.get("/api/get-page", {
+      let response = await axios.get('/api/get-page', {
         params: {
           url: url,
         },
@@ -89,25 +89,25 @@ const LinkPage: FC<ILinkPage> = () => {
 
       let data = response.data;
 
-      let doc = new DOMParser().parseFromString(data, "text/html");
+      let doc = new DOMParser().parseFromString(data, 'text/html');
 
-      let items = Array.from(doc.getElementsByTagName("*"));
+      let items = Array.from(doc.getElementsByTagName('*'));
 
       await Promise.all(
         items.map(async (value) => {
           if (
             value?.children.length === 0 &&
             value.textContent &&
-            value.tagName !== "SCRIPT" &&
-            value.tagName !== "STYLE"
+            value.tagName !== 'SCRIPT' &&
+            value.tagName !== 'STYLE'
           ) {
             let data = await AWSTranslate.doTranslate({
               Text: value.textContent,
-              SourceLanguageCode: "auto",
-              TargetLanguageCode: select?.LanguageCode || "vi",
+              SourceLanguageCode: 'auto',
+              TargetLanguageCode: select?.LanguageCode || 'vi',
             });
 
-            value.textContent = data.TranslatedText;
+            value.textContent = data.text;
           }
         })
       );
@@ -136,7 +136,7 @@ const LinkPage: FC<ILinkPage> = () => {
     doc.close();
     console.log(frame.contentDocument);
 
-    frame.style.width = "100%";
+    frame.style.width = '100%';
     frame.style.height = `${frame.contentWindow.document.body?.scrollHeight}px`;
   };
 
@@ -160,17 +160,17 @@ const LinkPage: FC<ILinkPage> = () => {
             <InputBox>
               <Input
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Link translate"
+                placeholder='Link translate'
               />
               <Select setSelect={setSelect} />
             </InputBox>
             <ButtonBox>
-              <Button type="submit">Translate</Button>
+              <Button type='submit'>Translate</Button>
             </ButtonBox>
           </Form>
           <BoxHtml>
             {html && (
-              <Iframe src="about:blank" frameBorder="0" ref={writeHTML} />
+              <Iframe src='about:blank' frameBorder='0' ref={writeHTML} />
             )}
           </BoxHtml>
         </LinkBox>
